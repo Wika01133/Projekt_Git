@@ -27,4 +27,9 @@ public class BookController {
     public List<Book> getAllBooks() {
         return bookService.getAllBooks();
     }
+
+    @GetMapping("/sorted")
+    public List<Book> getAllBooksSortedByRatingDesc() {
+        return bookService.getAllBooksSortedByRatingDesc();
+    }
 }
