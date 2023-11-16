@@ -9,4 +9,6 @@ public interface BookService {
     Book addBook(Book book);
 
     List<Book> getAllBooks();
+
+    List<Book> getAllBooksSortedByRatingDesc();
 }
