@@ -11,4 +11,7 @@ public interface BookService {
     List<Book> getAllBooks();
 
     List<Book> getAllBooksSortedByRatingDesc();
+
+    void deleteBook(Long bookId);
+    Book getBookById(Long bookId);
 }
