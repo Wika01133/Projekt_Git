@@ -1,5 +1,4 @@
 package com.example.demo.controller;
-
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +10,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 public class UserController {
+
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
@@ -31,20 +35,22 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<String> addUser(@RequestBody User user) {
-        userService.addUser(user);
-        return ResponseEntity.ok("Użytkownik dodany pomyślnie");
+    public ResponseEntity<?> addUser(@RequestBody User user) {
+        if (userService.isUsernameUnique(user.getUsername())) {
+            userService.addUser(user);
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.badRequest().body("Nazwa użytkownika już istnieje");
+        }
     }
 
-    @PutMapping("/{username}")
-    public ResponseEntity<String> editUser(@PathVariable String username, @RequestBody User updatedUser) {
-        userService.editUser(username, updatedUser);
-        return ResponseEntity.ok("Użytkownik zaktualizowany pomyślnie");
+    @PutMapping("/{id}")
+    public User updatedUser(@PathVariable Long id, @RequestBody User updatedUser) {
+        return userService.updateUser(id, updatedUser);
     }
 
-    @DeleteMapping("/{username}")
-    public ResponseEntity<String> deleteUser(@PathVariable String username) {
-        userService.deleteUser(username);
-        return ResponseEntity.ok("Użytkownik usunięty pomyślnie");
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
     }
 }
