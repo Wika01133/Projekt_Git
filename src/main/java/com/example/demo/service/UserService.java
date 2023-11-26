@@ -1,39 +1,60 @@
 package com.example.demo.service;
 
+import com.example.demo.model.Book;
 import com.example.demo.model.User;
+import com.example.demo.repository.UserRepository;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
-    private List<User> users = new ArrayList<>();
+
+    private final UserRepository userRepository;
+
+    @Autowired
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public List<User> getAllUsers() {
-        return users;
+        return userRepository.findAll();
     }
 
     public User getUserByUsername(String username) {
-        return users.stream()
-                .filter(user -> user.getUsername().equals(username))
-                .findFirst()
-                .orElse(null);
+        return userRepository.findByUsername(username).orElse(null);
     }
 
     public void addUser(User user) {
-        users.add(user);
+        userRepository.save(user);
     }
 
-    public void editUser(String username, User updatedUser) {
-        User existingUser = getUserByUsername(username);
-        if (existingUser != null) {
-            existingUser.setUsername(updatedUser.getUsername());
-            existingUser.setPassword(updatedUser.getPassword());
+    public User updateUser(Long id, User updatedUser) {
+        Optional<User> optionalUser = userRepository.findById(id);
+
+        if (optionalUser.isPresent()) {
+            User existingUser = optionalUser.get();
+            BeanUtils.copyProperties(updatedUser, existingUser, "id");
+            return userRepository.save(existingUser);
+        } else {
+            return null;
         }
     }
 
-    public void deleteUser(String username) {
-        users.removeIf(user -> user.getUsername().equals(username));
+
+    public void deleteUser(Long id) {
+        Optional<User> optionalUser = userRepository.findById(id);
+
+        if (optionalUser.isPresent()) {
+            userRepository.deleteById(id);
+        }
+    }
+
+    public boolean isUsernameUnique(String username) {
+        Optional<User> existingUser = userRepository.findByUsername(username);
+        return existingUser.isEmpty();
     }
 }
