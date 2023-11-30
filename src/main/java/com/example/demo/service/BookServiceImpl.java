@@ -32,7 +32,6 @@ public class BookServiceImpl implements BookService {
         return bookRepository.findAllByOrderByRatingDesc();
     }
 
-    // BookServiceImpl.java
     @Override
     public void deleteBook(Long bookId) {
         bookRepository.deleteById(bookId);
