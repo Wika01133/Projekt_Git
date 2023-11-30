@@ -7,7 +7,5 @@ import java.util.List;
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
 
-    // Dodatkowe metody zapytań można umieścić tutaj, Spring Data JPA automatycznie dostarcza implementacje
-    // dla podstawowych operacji CRUD (Create, Read, Update, Delete)
     List<Book> findAllByOrderByRatingDesc();
 }

@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -30,10 +29,10 @@ public class BookControllerIntegrationTest {
 
     @Test
     public void testAddBook() throws Exception {
-        // Arrange
+
         Book newBook = new Book("Test Book", 9);
 
-        // Act (POST)
+
         MvcResult postResult = mockMvc.perform(MockMvcRequestBuilders
                         .post("/books")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -41,7 +40,7 @@ public class BookControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        // Assert
+
         Book addedBook = objectMapper.readValue(postResult.getResponse().getContentAsString(), Book.class);
         assertEquals(newBook.getTitle(), addedBook.getTitle());
         assertEquals(newBook.getRating(), addedBook.getRating());
@@ -49,17 +48,17 @@ public class BookControllerIntegrationTest {
 
     @Test
     public void testGetAllBooks() throws Exception {
-        // Act (GET)
+
         MvcResult getResult = mockMvc.perform(MockMvcRequestBuilders
                         .get("/books"))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        // Assert
+
         String content = getResult.getResponse().getContentAsString();
         List<Book> books = objectMapper.readValue(content, List.class);
 
-        // Check if the list of books is not empty
+
         assertFalse(books.isEmpty());
     }
 }

@@ -14,7 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
-import com.example.demo.service.UserService;
+
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
@@ -27,7 +27,7 @@ public class UserServiceTest {
 
     @Test
     public void testUpdateUser() {
-        // Arrange
+
         Long userId = 1L;
         User existingUser = new User("existingUser", "password");
         User updatedUserData = new User("updatedUser", "newPassword");
@@ -35,10 +35,10 @@ public class UserServiceTest {
         when(userRepository.findById(userId)).thenReturn(Optional.of(existingUser));
         when(userRepository.save(any(User.class))).thenReturn(updatedUserData);
 
-        // Act
+
         User updatedUser = userService.updateUser(userId, updatedUserData);
 
-        // Assert
+
         assertNotNull(updatedUser);
         assertEquals(updatedUserData.getUsername(), updatedUser.getUsername());
         assertEquals(updatedUserData.getPassword(), updatedUser.getPassword());
